@@ -1,1 +1,1 @@
-# Stanford CS230 Traffic Sign
+# Stanford CS230 Traffic Sign Group Project
