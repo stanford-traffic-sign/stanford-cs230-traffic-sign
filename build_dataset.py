@@ -19,6 +19,7 @@ if __name__ == '__main__':
         image_paths = np.array(glob(f'{train_folders[cls_index]}/*.ppm'))
         class_name = class_names[i]
         print(f'{class_name}: {len(image_paths)}')
+        np.random.seed(1)
         np.random.shuffle(image_paths)
 
         dataset_split = np.split(
