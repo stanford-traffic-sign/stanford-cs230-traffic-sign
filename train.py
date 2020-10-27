@@ -22,16 +22,13 @@ def train(model, optimizer, loss_fn, data_loader, model_path):
             # print statistics
             running_loss += loss.item()
 
-            steps = 100
+            steps = 200
             if i % steps == 0:  # print every mini-batch
-                print('[%d, %5d] loss: %.3f' %
-                      (epoch + 1, i + steps, running_loss / steps))
+                print(f'[{epoch + 1}, {i + steps}] loss: {round(running_loss / steps, 3)}')
                 running_loss = 0.0
 
-    print('Train finished')
-
     torch.save(model.state_dict(), model_path)
-    print(f'Model saved at {model_path}')
+    print(f'Train finished. Model saved at {model_path}')
 
 
 if __name__ == '__main__':
