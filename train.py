@@ -1,11 +1,10 @@
 import torch
 from torch import nn, optim
-
 from model.data_loader import train_data_loader
 from model.net import Net
 
 
-def train(model, optimizer, loss_fn, train_data_loader):
+def train(model, optimizer, loss_fn, train_data_loader, model_path):
     for epoch in range(2):  # loop over the dataset multiple times
         running_loss = 0.0
         for i, data in enumerate(train_data_loader, 0):
@@ -28,14 +27,15 @@ def train(model, optimizer, loss_fn, train_data_loader):
                       (epoch + 1, i + 1, running_loss / 200))
                 running_loss = 0.0
 
-    print('Finished Training')
+    print('Train finished')
 
-    PATH = './my_net.pth'
-    torch.save(model.state_dict(), PATH)
+    torch.save(model.state_dict(), model_path)
+    print(f'Model saved at {model_path}')
 
 
 if __name__ == '__main__':
     model = Net()
     loss_fn = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-    train(model, optimizer, loss_fn, train_data_loader)
+    model_path = './my_model.pth'
+    train(model, optimizer, loss_fn, train_data_loader, model_path)

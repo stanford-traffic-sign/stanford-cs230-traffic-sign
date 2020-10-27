@@ -4,4 +4,4 @@
 __pycache__
 data
 GTSRB
-my_net.pth
+my_model.pth
