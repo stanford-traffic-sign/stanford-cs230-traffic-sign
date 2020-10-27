@@ -9,7 +9,7 @@ if __name__ == '__main__':
     class_indices = [12, 13, 14, 17]
 
     DATA_DIR = Path('data')
-    DATASETS = ['train', 'dev']
+    DATASETS = ['train', 'val', 'test']
 
     for dataset in DATASETS:
         for class_name in class_names:
@@ -23,8 +23,8 @@ if __name__ == '__main__':
 
         dataset_split = np.split(
             image_paths,
-            # 80% of the images for training, 20% for dev for each class
-            indices_or_sections=[int(0.8 * len(image_paths))])
+            # 80% of the images for training, 10% for validation, and 10% test for each class
+            indices_or_sections=[int(0.8 * len(image_paths)), int(0.9 * len(image_paths))])
 
         dataset_data = zip(DATASETS, dataset_split)
 
