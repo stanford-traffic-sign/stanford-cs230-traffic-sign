@@ -16,8 +16,29 @@ def evaluate(model, data_loader):
     print(f'Accuracy of the network on the {total} val images: {round(100 * correct / total, 2)}%')
 
 
+def evaluate_by_class(model, data_loader, class_names):
+    class_correct = list(0. for i in range(10))
+    class_total = list(0. for i in range(10))
+    with torch.no_grad():
+        for (images, labels) in data_loader:
+            outputs = model(images)
+            _, predicted = torch.max(outputs, 1)
+            c = (predicted == labels).squeeze()
+            for i in range(4):
+                label = labels[i]
+                class_correct[label] += c[i].item()
+                class_total[label] += 1
+
+
+    for i in range(4):
+        print('Accuracy of %5s : %2d %%' % (
+            class_names[i], 100 * class_correct[i] / class_total[i]))
+
+
 if __name__ == '__main__':
     model = Net()
     model_path = './my_model.pth'
+    class_names = ['priority_road', 'give_way', 'stop', 'no_entry']
     model.load_state_dict(torch.load(model_path))
     evaluate(model, val_data_loader)
+    evaluate_by_class(model, val_data_loader, class_names)
