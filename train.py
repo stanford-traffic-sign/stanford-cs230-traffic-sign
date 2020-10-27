@@ -34,6 +34,6 @@ def train(model, optimizer, loss_fn, data_loader, model_path):
 if __name__ == '__main__':
     model = net.Net()
     loss_fn = net.loss_fn
-    optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+    optimizer = optim.SGD(model.parameters(), lr=0.002, momentum=0.9)
     model_path = './my_model.pth'
     train(model, optimizer, loss_fn, train_data_loader, model_path)
