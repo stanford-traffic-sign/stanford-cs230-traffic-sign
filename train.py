@@ -1,5 +1,7 @@
 import torch
 from torch import nn, optim
+
+from model.data_loader import train_data_loader
 from model.net import Net
 
 
@@ -14,7 +16,7 @@ def train(model, optimizer, loss_fn, train_data_loader):
             optimizer.zero_grad()
 
             # forward + backward + optimize
-            outputs = net(inputs)
+            outputs = model(inputs)
             loss = loss_fn(outputs, labels)
             loss.backward()
             optimizer.step()
@@ -29,7 +31,7 @@ def train(model, optimizer, loss_fn, train_data_loader):
     print('Finished Training')
 
     PATH = './my_net.pth'
-    torch.save(net.state_dict(), PATH)
+    torch.save(model.state_dict(), PATH)
 
 
 if __name__ == '__main__':
