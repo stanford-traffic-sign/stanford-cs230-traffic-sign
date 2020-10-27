@@ -1,7 +1,7 @@
 import torch
 from torch import nn, optim
 from model.data_loader import train_data_loader
-from model.net import Net
+import model.net as net
 
 
 def train(model, optimizer, loss_fn, train_data_loader, model_path):
@@ -34,8 +34,8 @@ def train(model, optimizer, loss_fn, train_data_loader, model_path):
 
 
 if __name__ == '__main__':
-    model = Net()
-    loss_fn = nn.CrossEntropyLoss()
+    model = net.Net()
+    loss_fn = net.loss_fn
     optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
     model_path = './my_model.pth'
     train(model, optimizer, loss_fn, train_data_loader, model_path)
