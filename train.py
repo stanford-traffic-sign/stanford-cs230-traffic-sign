@@ -4,10 +4,10 @@ from model.data_loader import train_data_loader
 import model.net as net
 
 
-def train(model, optimizer, loss_fn, dataloader, model_path):
+def train(model, optimizer, loss_fn, data_loader, model_path):
     for epoch in range(2):  # loop over the dataset multiple times
         running_loss = 0.0
-        for i, (train_batch, labels_batch) in enumerate(dataloader):
+        for i, (train_batch, labels_batch) in enumerate(data_loader):
             # compute model output and loss
             output_batch = model(train_batch)
             loss = loss_fn(output_batch, labels_batch)

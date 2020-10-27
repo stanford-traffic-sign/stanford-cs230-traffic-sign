@@ -21,5 +21,6 @@ TRANSFORM_IMG = transforms.Compose([
 
 train_data = ImageFolder(root=TRAIN_DATA_PATH, transform=TRANSFORM_IMG)
 train_data_loader = DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
+
 val_data = ImageFolder(root=VAL_DATA_PATH, transform=TRANSFORM_IMG)
 val_data_loader = DataLoader(val_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
