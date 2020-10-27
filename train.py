@@ -21,9 +21,11 @@ def train(model, optimizer, loss_fn, dataloader, model_path):
 
             # print statistics
             running_loss += loss.item()
-            if i % 200 == 199:  # print every 2000 mini-batches
+
+            steps = 100
+            if i % steps == 0:  # print every mini-batch
                 print('[%d, %5d] loss: %.3f' %
-                      (epoch + 1, i + 1, running_loss / 200))
+                      (epoch + 1, i + steps, running_loss / steps))
                 running_loss = 0.0
 
     print('Train finished')
