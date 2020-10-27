@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 
 BATCH_SIZE = 10
 TRAIN_DATA_PATH = './data/train/'
-TEST_DATA_PATH = './data/test/'
+VAL_DATA_PATH = './data/val/'
 # TRANSFORM_IMG = transforms.Compose([
 #     transforms.Resize(32),
 #     transforms.CenterCrop(32),
@@ -21,5 +21,5 @@ TRANSFORM_IMG = transforms.Compose([
 
 train_data = ImageFolder(root=TRAIN_DATA_PATH, transform=TRANSFORM_IMG)
 train_data_loader = DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
-test_data = ImageFolder(root=TEST_DATA_PATH, transform=TRANSFORM_IMG)
-test_data_loader = DataLoader(test_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
+val_data = ImageFolder(root=VAL_DATA_PATH, transform=TRANSFORM_IMG)
+val_data_loader = DataLoader(val_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
