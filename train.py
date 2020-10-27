@@ -4,20 +4,19 @@ from model.data_loader import train_data_loader
 import model.net as net
 
 
-def train(model, optimizer, loss_fn, train_data_loader, model_path):
+def train(model, optimizer, loss_fn, dataloader, model_path):
     for epoch in range(2):  # loop over the dataset multiple times
         running_loss = 0.0
-        for i, data in enumerate(train_data_loader, 0):
-            # get the inputs; data is a list of [inputs, labels]
-            inputs, labels = data
+        for i, (train_batch, labels_batch) in enumerate(dataloader):
+            # compute model output and loss
+            output_batch = model(train_batch)
+            loss = loss_fn(output_batch, labels_batch)
 
-            # zero the parameter gradients
+            # clear previous gradients, compute gradients of all variables wrt loss
             optimizer.zero_grad()
-
-            # forward + backward + optimize
-            outputs = model(inputs)
-            loss = loss_fn(outputs, labels)
             loss.backward()
+
+            # performs updates using calculated gradients
             optimizer.step()
 
             # print statistics
