@@ -3,10 +3,11 @@ import numpy as np
 from glob import glob
 import shutil
 
-if __name__ == '__main__':
+from utils.data_class import class_indices, class_names
+
+
+def build_dataset(class_names, class_indices):
     train_folders = sorted(glob('GTSRB/Final_Training/Images/*'))
-    class_names = ['speed_30', 'priority_road', 'give_way', 'stop', 'no_entry', 'left_straight', 'roundabout']
-    class_indices = [1, 12, 13, 14, 17, 37, 40]
 
     DATA_DIR = Path('data')
     DATASETS = ['train', 'val']
@@ -15,8 +16,8 @@ if __name__ == '__main__':
         for class_name in class_names:
             (DATA_DIR / dataset / class_name).mkdir(parents=True, exist_ok=True)
 
-    for i, cls_index in enumerate(class_indices):
-        image_paths = np.array(glob(f'{train_folders[cls_index]}/*.ppm'))
+    for i, class_idx in enumerate(class_indices):
+        image_paths = np.array(glob(f'{train_folders[class_idx]}/*.ppm'))
         class_name = class_names[i]
         print(f'{class_name}: {len(image_paths)}')
         np.random.seed(1)
@@ -32,3 +33,7 @@ if __name__ == '__main__':
         for dataset, images in dataset_data:
             for img_path in images:
                 shutil.copy(img_path, f'{DATA_DIR}/{dataset}/{class_name}/')
+
+
+if __name__ == '__main__':
+    build_dataset(class_names, class_indices)

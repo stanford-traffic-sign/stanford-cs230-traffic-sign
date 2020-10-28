@@ -1,6 +1,7 @@
 import torch
 from model.data_loader import val_data_loader
 from model.net import Net
+from utils.data_class import class_names
 
 
 def evaluate(model, data_loader):
@@ -37,7 +38,6 @@ def evaluate_by_class(model, data_loader, class_names):
 if __name__ == '__main__':
     model = Net()
     model_path = './my_model.pth'
-    class_names = ['speed_30', 'priority_road', 'give_way', 'stop', 'no_entry', 'left_straight', 'roundabout']
     model.load_state_dict(torch.load(model_path))
     evaluate(model, val_data_loader)
     evaluate_by_class(model, val_data_loader, class_names)
