@@ -23,7 +23,7 @@ def evaluate_by_class(model, data_loader, class_names):
         for (images, labels) in data_loader:
             outputs = model(images)
             _, predicted = torch.max(outputs, 1)
-            c = (predicted == labels).squeeze()
+            c = torch.squeeze(predicted == labels)
             for i in range(len(labels)):
                 label = labels[i]
                 class_correct[label] += c[i].item()
