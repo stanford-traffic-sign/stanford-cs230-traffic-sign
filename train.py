@@ -9,24 +9,22 @@ import model.net as net
 def train(model, optimizer, loss_fn, data_loader, model_path):
     for epoch in range(2):  # loop over the dataset multiple times
         running_loss = 0.0
-        for i, (train_batch, labels_batch) in enumerate(data_loader):
-            # compute model output and loss
-            output_batch = model(train_batch)
-            loss = loss_fn(output_batch, labels_batch)
-
-            # clear previous gradients, compute gradients of all variables wrt loss
+        for i, (batch_inputs, batch_labels) in enumerate(data_loader):
+            # zero the parameter gradients
             optimizer.zero_grad()
-            loss.backward()
 
-            # performs updates using calculated gradients
+            # forward + backward + optimize
+            outputs = model(batch_inputs)
+            loss = loss_fn(outputs, batch_labels)
+            loss.backward()
             optimizer.step()
 
             # print statistics
             running_loss += loss.item()
 
             steps = 200
-            if i % steps == 0:  # print every mini-batch
-                print(f'[{epoch + 1}, {i + steps}] loss: {round(running_loss / steps, 3)}')
+            if i % steps == 199:  # print every 200 mini-batches
+                print(f'[{epoch + 1}, {i + 1}] loss: {round(running_loss / steps, 3)}')
                 running_loss = 0.0
 
     torch.save(model.state_dict(), model_path)
