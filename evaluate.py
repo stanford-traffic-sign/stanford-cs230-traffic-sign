@@ -17,20 +17,19 @@ def evaluate(model, data_loader):
 
 
 def evaluate_by_class(model, data_loader, class_names):
-    class_correct = list(0. for i in range(10))
-    class_total = list(0. for i in range(10))
+    class_correct = list(0. for i in range(len(class_names)))
+    class_total = list(0. for i in range(len(class_names)))
     with torch.no_grad():
         for (images, labels) in data_loader:
             outputs = model(images)
             _, predicted = torch.max(outputs, 1)
             c = (predicted == labels).squeeze()
-            for i in range(4):
+            for i in range(len(labels)):
                 label = labels[i]
                 class_correct[label] += c[i].item()
                 class_total[label] += 1
 
-
-    for i in range(4):
+    for i in range(len(class_names)):
         print('Accuracy of %5s : %2d %%' % (
             class_names[i], 100 * class_correct[i] / class_total[i]))
 
