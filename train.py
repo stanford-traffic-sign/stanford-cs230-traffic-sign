@@ -1,6 +1,8 @@
-import torch
 from torch import nn, optim
+import torch
+
 from model.data_loader import train_data_loader
+import config
 import model.net as net
 
 
@@ -35,5 +37,4 @@ if __name__ == '__main__':
     model = net.Net()
     loss_fn = net.loss_fn
     optimizer = optim.SGD(model.parameters(), lr=0.002, momentum=0.9)
-    model_path = './my_model.pth'
-    train(model, optimizer, loss_fn, train_data_loader, model_path)
+    train(model, optimizer, loss_fn, train_data_loader, config.model_path)

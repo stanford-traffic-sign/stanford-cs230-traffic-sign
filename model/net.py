@@ -21,4 +21,5 @@ class Net(nn.Module):
         x = self.fc3(x)
         return x
 
+
 loss_fn = nn.CrossEntropyLoss()

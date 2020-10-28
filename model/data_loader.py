@@ -1,6 +1,6 @@
-import torchvision.transforms as transforms
-from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
+from torchvision.datasets import ImageFolder
+import torchvision.transforms as transforms
 
 BATCH_SIZE = 10
 TRAIN_DATA_PATH = './data/train/'

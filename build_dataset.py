@@ -1,6 +1,6 @@
+from glob import glob
 from pathlib import Path
 import numpy as np
-from glob import glob
 import shutil
 
 from utils.data_class import class_indices, class_names

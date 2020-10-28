@@ -1,7 +1,9 @@
-import torch
-from model.data_loader import val_data_loader
 from model.net import Net
+import torch
+
+from model.data_loader import val_data_loader
 from utils.data_class import class_names
+import config
 
 
 def evaluate(model, data_loader):
@@ -37,7 +39,6 @@ def evaluate_by_class(model, data_loader, class_names):
 
 if __name__ == '__main__':
     model = Net()
-    model_path = './my_model.pth'
-    model.load_state_dict(torch.load(model_path))
+    model.load_state_dict(torch.load(config.model_path))
     evaluate(model, val_data_loader)
     evaluate_by_class(model, val_data_loader, class_names)
