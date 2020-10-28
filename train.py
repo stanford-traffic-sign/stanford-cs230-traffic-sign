@@ -1,15 +1,16 @@
 from torch import nn, optim
 import torch
 
+from evaluate import evaluate
 from model.data_loader import train_data_loader
 import config
 import model.net as net
 
 
-def train(model, optimizer, loss_fn, data_loader, model_path):
+def train(model, optimizer, loss_fn, train_data_loader, model_path):
     for epoch in range(5):  # loop over the dataset multiple times
         running_loss = 0.0
-        for i, (batch_inputs, batch_labels) in enumerate(data_loader):
+        for i, (batch_inputs, batch_labels) in enumerate(train_data_loader):
             # zero the parameter gradients
             optimizer.zero_grad()
 
@@ -26,6 +27,8 @@ def train(model, optimizer, loss_fn, data_loader, model_path):
             if i % steps == 199:  # print every 200 mini-batches
                 print(f'[{epoch + 1}, {i + 1}] loss: {round(running_loss / steps, 3)}')
                 running_loss = 0.0
+
+        evaluate(model, train_data_loader)
 
     torch.save(model.state_dict(), model_path)
     print(f'Train finished. Model saved at {model_path}')

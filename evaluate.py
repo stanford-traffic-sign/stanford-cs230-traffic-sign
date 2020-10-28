@@ -16,7 +16,7 @@ def evaluate(model, data_loader):
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
-    print(f'Accuracy of the network on the {total} val images: {round(100 * correct / total, 2)}%')
+    print(f'Accuracy of the network on the {total} images: {round(100 * correct / total, 2)}%')
 
 
 def evaluate_by_class(model, data_loader, class_names):
@@ -33,7 +33,7 @@ def evaluate_by_class(model, data_loader, class_names):
                 class_total[label] += 1
 
     for i in range(len(class_names)):
-        print(f'Accuracy of {class_names[i]}, {round(100 * class_correct[i] / class_total[i], 1)}%')
+        print(f'Accuracy of {class_names[i]}: {round(100 * class_correct[i] / class_total[i], 1)}%')
 
 
 if __name__ == '__main__':
