@@ -37,5 +37,6 @@ def train(model, optimizer, loss_fn, train_data_loader, model_path):
 if __name__ == '__main__':
     model = net.Net()
     loss_fn = net.loss_fn
-    optimizer = optim.SGD(model.parameters(), lr=0.002, momentum=0.9)
+    learning_rate = 0.001
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     train(model, optimizer, loss_fn, train_data_loader, config.model_path)
