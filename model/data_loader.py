@@ -8,6 +8,7 @@ VAL_DATA_PATH = './data/val/'
 
 train_transform = transforms.Compose([
     transforms.Resize((32, 32)),
+    transforms.ColorJitter(0.4, 0.4, 0.4),
     transforms.ToTensor(),
     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
