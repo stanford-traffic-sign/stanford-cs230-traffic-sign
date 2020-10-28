@@ -5,8 +5,8 @@ import shutil
 
 if __name__ == '__main__':
     train_folders = sorted(glob('GTSRB/Final_Training/Images/*'))
-    class_names = ['priority_road', 'give_way', 'stop', 'no_entry']
-    class_indices = [12, 13, 14, 17]
+    class_names = ['speed_30', 'priority_road', 'give_way', 'stop', 'no_entry', 'left_straight', 'roundabout']
+    class_indices = [1, 12, 13, 14, 17, 37, 40]
 
     DATA_DIR = Path('data')
     DATASETS = ['train', 'val']
