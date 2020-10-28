@@ -7,7 +7,7 @@ import model.net as net
 
 
 def train(model, optimizer, loss_fn, data_loader, model_path):
-    for epoch in range(2):  # loop over the dataset multiple times
+    for epoch in range(5):  # loop over the dataset multiple times
         running_loss = 0.0
         for i, (batch_inputs, batch_labels) in enumerate(data_loader):
             # zero the parameter gradients
