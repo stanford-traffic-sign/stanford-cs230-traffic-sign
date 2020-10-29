@@ -12,9 +12,9 @@ def evaluate(model, data_loader):
     with torch.no_grad():
         for (images, labels) in data_loader:
             outputs = model(images)
-            _, predicted = torch.max(outputs.data, 1)
+            _, predicts = torch.max(outputs.data, dim=1)
             total += labels.size(0)
-            correct += (predicted == labels).sum().item()
+            correct += (predicts == labels).sum().item()
 
     print(f'Accuracy of the network on the {total} images: {round(100 * correct / total, 2)}%')
 
