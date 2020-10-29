@@ -9,7 +9,7 @@ import config
 
 def evaluate(model, loss_fn, data_loader):
     correct = 0
-    total = 0
+    num_images = 0
     losses = []
     with torch.no_grad():
         for (images, labels) in data_loader:
@@ -17,16 +17,16 @@ def evaluate(model, loss_fn, data_loader):
             _, predicts = torch.max(outputs.data, dim=1)
             loss = loss_fn(outputs, labels)
             losses.append(loss.item())
-            total += labels.size(0)
+            num_images += labels.size(0)
             correct += torch.sum(predicts == labels).item()
 
-    accuracy = correct / total
-    return accuracy, np.mean(losses), total
+    accuracy = correct / num_images
+    return accuracy, np.mean(losses), num_images
 
 
 def evaluate_by_class(model, data_loader, class_names):
-    class_correct = list(0. for _ in range(len(class_names)))
-    class_total = list(0. for _ in range(len(class_names)))
+    correct = list(0. for _ in range(len(class_names)))
+    num_classes = list(0. for _ in range(len(class_names)))
     with torch.no_grad():
         for (images, labels) in data_loader:
             outputs = model(images)
@@ -34,16 +34,16 @@ def evaluate_by_class(model, data_loader, class_names):
             c = torch.squeeze(predicted == labels)
             for i in range(len(labels)):
                 label = labels[i]
-                class_correct[label] += c[i].item()
-                class_total[label] += 1
+                correct[label] += c[i].item()
+                num_classes[label] += 1
 
     for i in range(len(class_names)):
-        print(f'- {class_names[i]}\t{round(100 * class_correct[i] / class_total[i], 1)}%')
+        print(f'- {class_names[i]}\t{round(100 * correct[i] / num_classes[i], 1)}%')
 
 
 if __name__ == '__main__':
     model = Net()
     model.load_state_dict(torch.load(config.model_path))
-    val_accuracy, _, total = evaluate(model, loss_fn, val_data_loader)
-    print(f'Accuracy {round(val_accuracy * 100, 2)}% ({total} images)')
+    val_accuracy, _, num_images = evaluate(model, loss_fn, val_data_loader)
+    print(f'Accuracy {round(val_accuracy * 100, 2)}% ({num_images} images)')
     evaluate_by_class(model, val_data_loader, class_names)
