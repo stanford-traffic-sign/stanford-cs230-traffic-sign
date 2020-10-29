@@ -2,13 +2,15 @@ from torch import nn, optim
 import torch
 
 from evaluate import evaluate
-from model.data_loader import train_data_loader
+from model.data_loader import train_data_loader, val_data_loader
 import config
 import model.net as net
 
 
-def train(model, optimizer, loss_fn, train_data_loader, model_path):
-    for epoch in range(4):  # loop over the dataset multiple times
+def train(model, optimizer, loss_fn, train_data_loader, val_data_loader, model_path, total_epoch):
+    for epoch in range(total_epoch):  # loop over the dataset multiple times
+        print(f'Epoch {epoch + 1}/{total_epoch}')
+        print('----------')
         running_loss = 0.0
         for i, (batch_inputs, batch_labels) in enumerate(train_data_loader):
             # zero the parameter gradients
@@ -25,10 +27,14 @@ def train(model, optimizer, loss_fn, train_data_loader, model_path):
 
             steps = 200
             if i % steps == 199:  # print every 200 mini-batches
-                print(f'[{epoch + 1}, {i + 1}] loss: {round(running_loss / steps, 3)}')
+                print(f'{i + 1} mini batches\tloss: {round(running_loss / steps, 3)}')
                 running_loss = 0.0
 
-        evaluate(model, train_data_loader)
+        train_accuracy, train_total = evaluate(model, train_data_loader)
+        val_accuracy, val_total = evaluate(model, val_data_loader)
+        print(f'Train\taccuracy: {train_accuracy}%\timages: {train_total}')
+        print(f'Val\taccuracy: {val_accuracy}%\timages: {val_total}')
+        print()
 
     torch.save(model.state_dict(), model_path)
     print(f'Train finished. Model saved at {model_path}')
@@ -38,5 +44,6 @@ if __name__ == '__main__':
     model = net.Net()
     loss_fn = net.loss_fn
     learning_rate = 0.001
+    total_epoch = 4
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
-    train(model, optimizer, loss_fn, train_data_loader, config.model_path)
+    train(model, optimizer, loss_fn, train_data_loader, val_data_loader, config.model_path, total_epoch)

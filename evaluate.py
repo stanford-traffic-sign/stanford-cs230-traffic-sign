@@ -16,7 +16,8 @@ def evaluate(model, data_loader):
             total += labels.size(0)
             correct += (predicts == labels).sum().item()
 
-    print(f'Accuracy of the network on the {total} images: {round(100 * correct / total, 2)}%')
+    accuracy = round(100 * correct / total, 2)
+    return accuracy, total
 
 
 def evaluate_by_class(model, data_loader, class_names):
@@ -39,5 +40,6 @@ def evaluate_by_class(model, data_loader, class_names):
 if __name__ == '__main__':
     model = Net()
     model.load_state_dict(torch.load(config.model_path))
-    evaluate(model, val_data_loader)
+    val_accuracy, total = evaluate(model, val_data_loader)
+    print(f'Accuracy {val_accuracy}% ({total} images)')
     evaluate_by_class(model, val_data_loader, class_names)
