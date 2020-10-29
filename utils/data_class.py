@@ -14,14 +14,14 @@ class_names = [
     # mandatory
     'right',
     'straight',
-    # 'left_straight',
-    # 'roundabout',
+    'left_straight',
+    'roundabout',
 
     # others
-    # 'priority_road',
-    # 'give_way',
-    # 'stop',
-    # 'cancel_no_overtaking',
+    'priority_road',
+    'give_way',
+    'stop',
+    'cancel_no_overtaking',
 ]
 
 class_indices = [
@@ -40,12 +40,12 @@ class_indices = [
     # mandatory
     33,  # right
     35,  # straight
-    # 37,  # left_straight
-    # 40,  # roundabout
+    37,  # left_straight
+    40,  # roundabout
 
     # others
-    # 12,  # priority_road
-    # 13,  # give_way
-    # 14,  # stop
-    # 41,  # cancel_no_overtaking
+    12,  # priority_road
+    13,  # give_way
+    14,  # stop
+    41,  # cancel_no_overtaking
 ]
