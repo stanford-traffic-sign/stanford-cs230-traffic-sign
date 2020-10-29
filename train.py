@@ -8,25 +8,27 @@ import model.net as net
 
 
 def train(model, optimizer, loss_fn, train_data_loader, val_data_loader, model_path, num_epochs):
-    for epoch in range(num_epochs):  # loop over the dataset multiple times
+    # Loop over the dataset multiple times
+    for epoch in range(num_epochs):
         print(f'Epoch {epoch + 1}/{num_epochs}')
         print('----------')
         running_loss = 0.0
         for i, (batch_inputs, batch_labels) in enumerate(train_data_loader):
-            # zero the parameter gradients
+            # Zero the parameter gradients
             optimizer.zero_grad()
 
-            # forward + backward + optimize
+            # Forward + backward + optimize
             outputs = model(batch_inputs)
             loss = loss_fn(outputs, batch_labels)
             loss.backward()
             optimizer.step()
 
-            # print statistics
+            # Print statistics
             running_loss += loss.item()
 
+            # Print every 200 mini-batches
             steps = 200
-            if i % steps == 199:  # print every 200 mini-batches
+            if i % steps == 199:
                 print(f'- {i + 1} mini batches\tloss {round(running_loss / steps, 3)}')
                 running_loss = 0.0
 
@@ -44,6 +46,6 @@ if __name__ == '__main__':
     model = net.Net()
     loss_fn = net.loss_fn
     learning_rate = 0.001
-    num_epochs = 10
+    num_epochs = 15
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     train(model, optimizer, loss_fn, train_data_loader, val_data_loader, config.model_path, num_epochs)
