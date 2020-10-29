@@ -3,7 +3,7 @@ from torchvision.datasets import ImageFolder
 import torchvision.transforms as transforms
 
 
-BATCH_SIZE = 32
+BATCH_SIZE = 64
 TRAIN_DATA_PATH = './data/train/'
 VAL_DATA_PATH = './data/val/'
 
