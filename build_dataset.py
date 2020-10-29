@@ -3,22 +3,21 @@ from pathlib import Path
 import numpy as np
 import shutil
 
-from utils.data_class import class_indices, class_names
+from utils.data_class import class_map
 
 
-def build_dataset(class_names, class_indices):
+def build_dataset(class_map):
     train_folders = sorted(glob('GTSRB/Final_Training/Images/*'))
 
     DATA_DIR = Path('data')
     DATASETS = ['train', 'val']
 
     for dataset in DATASETS:
-        for class_name in class_names:
+        for class_name in class_map.values():
             (DATA_DIR / dataset / class_name).mkdir(parents=True, exist_ok=True)
 
-    for i, class_idx in enumerate(class_indices):
+    for class_idx, class_name in class_map.items():
         image_paths = np.array(glob(f'{train_folders[class_idx]}/*.ppm'))
-        class_name = class_names[i]
         print(f'{class_name}: {len(image_paths)}')
         np.random.seed(1)
         np.random.shuffle(image_paths)
@@ -36,4 +35,4 @@ def build_dataset(class_names, class_indices):
 
 
 if __name__ == '__main__':
-    build_dataset(class_names, class_indices)
+    build_dataset(class_map)

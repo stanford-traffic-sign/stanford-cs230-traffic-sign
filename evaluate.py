@@ -3,7 +3,7 @@ import numpy as np
 import torch
 
 from model.data_loader import val_data_loader
-from utils.data_class import class_names
+from utils.data_class import class_map
 import config
 
 
@@ -24,9 +24,9 @@ def evaluate(model, loss_fn, data_loader):
     return accuracy, np.mean(losses), num_images
 
 
-def evaluate_by_class(model, data_loader, class_names):
-    correct = list(0. for _ in range(len(class_names)))
-    num_classes = list(0. for _ in range(len(class_names)))
+def evaluate_by_class(model, data_loader, class_map):
+    correct = list(0. for _ in range(len(class_map)))
+    num_class = list(0. for _ in range(len(class_map)))
     with torch.no_grad():
         for (images, labels) in data_loader:
             outputs = model(images)
@@ -35,10 +35,10 @@ def evaluate_by_class(model, data_loader, class_names):
             for i in range(len(labels)):
                 label = labels[i]
                 correct[label] += c[i].item()
-                num_classes[label] += 1
+                num_class[label] += 1
 
-    for i in range(len(class_names)):
-        print(f'- {class_names[i]}\t{round(100 * correct[i] / num_classes[i], 1)}%')
+    for i in range(len(class_map)):
+        print(f'- {class_map[i]}\t{round(100 * correct[i] / num_class[i], 1)}%')
 
 
 if __name__ == '__main__':
@@ -46,4 +46,4 @@ if __name__ == '__main__':
     model.load_state_dict(torch.load(config.model_path))
     val_accuracy, _, num_images = evaluate(model, loss_fn, val_data_loader)
     print(f'Accuracy {round(val_accuracy * 100, 2)}% ({num_images} images)')
-    evaluate_by_class(model, val_data_loader, class_names)
+    evaluate_by_class(model, val_data_loader, class_map)
