@@ -7,9 +7,9 @@ import config
 import model.net as net
 
 
-def train(model, optimizer, loss_fn, train_data_loader, val_data_loader, model_path, total_epoch):
-    for epoch in range(total_epoch):  # loop over the dataset multiple times
-        print(f'Epoch {epoch + 1}/{total_epoch}')
+def train(model, optimizer, loss_fn, train_data_loader, val_data_loader, model_path, num_epochs):
+    for epoch in range(num_epochs):  # loop over the dataset multiple times
+        print(f'Epoch {epoch + 1}/{num_epochs}')
         print('----------')
         running_loss = 0.0
         for i, (batch_inputs, batch_labels) in enumerate(train_data_loader):
@@ -44,6 +44,6 @@ if __name__ == '__main__':
     model = net.Net()
     loss_fn = net.loss_fn
     learning_rate = 0.001
-    total_epoch = 4
+    num_epochs = 10
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
-    train(model, optimizer, loss_fn, train_data_loader, val_data_loader, config.model_path, total_epoch)
+    train(model, optimizer, loss_fn, train_data_loader, val_data_loader, config.model_path, num_epochs)
