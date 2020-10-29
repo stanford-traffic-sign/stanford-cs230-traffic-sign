@@ -1,6 +1,8 @@
 import torch.nn as nn
 import torch.nn.functional as F
 
+from utils.data_class import num_classes
+
 
 class Net(nn.Module):
     def __init__(self):
@@ -11,6 +13,7 @@ class Net(nn.Module):
         self.fc1 = nn.Linear(16 * 5 * 5, 120)  # in_features, out_features
         self.fc2 = nn.Linear(120, 84)
         self.fc3 = nn.Linear(84, 16)
+        self.fc3 = nn.Linear(84, num_classes)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))

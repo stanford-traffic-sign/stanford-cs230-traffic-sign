@@ -49,3 +49,5 @@ class_indices = [
     14,  # stop
     41,  # cancel_no_overtaking
 ]
+
+num_classes = len(class_names)
