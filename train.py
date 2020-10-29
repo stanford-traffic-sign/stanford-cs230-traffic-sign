@@ -27,13 +27,13 @@ def train(model, optimizer, loss_fn, train_data_loader, val_data_loader, model_p
 
             steps = 200
             if i % steps == 199:  # print every 200 mini-batches
-                print(f'{i + 1} mini batches\tloss: {round(running_loss / steps, 3)}')
+                print(f'- {i + 1} mini batches\tloss {round(running_loss / steps, 3)}')
                 running_loss = 0.0
 
-        train_accuracy, train_total = evaluate(model, train_data_loader)
-        val_accuracy, val_total = evaluate(model, val_data_loader)
-        print(f'Train\taccuracy: {train_accuracy}%\timages: {train_total}')
-        print(f'Val\taccuracy: {val_accuracy}%\timages: {val_total}')
+        train_accuracy, train_loss, train_total = evaluate(model, loss_fn, train_data_loader)
+        val_accuracy, val_loss, val_total = evaluate(model, loss_fn, val_data_loader)
+        print(f'Train\taccuracy {round(train_accuracy * 100, 2)}%\tloss {round(train_loss, 3)}\timages {train_total}')
+        print(f'Val\taccuracy {round(val_accuracy * 100, 2)}%\tloss {round(val_loss, 3)}\timages {val_total}')
         print()
 
     torch.save(model.state_dict(), model_path)
