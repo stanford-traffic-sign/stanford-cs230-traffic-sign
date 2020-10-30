@@ -13,7 +13,7 @@ std_nums = [0.229, 0.224, 0.225]
 train_transform = transforms.Compose([
     transforms.Resize((32, 32)),
     transforms.RandomRotation(degrees=15),
-    transforms.ColorJitter(0.4, 0.4, 0.4),
+    transforms.ColorJitter(0.4, 0.4, 0.4, 0.1),
     transforms.ToTensor(),
     transforms.Normalize(mean=mean_nums,  std=std_nums),
 ])
