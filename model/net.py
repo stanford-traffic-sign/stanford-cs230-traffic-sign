@@ -8,6 +8,7 @@ class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         self.conv1 = nn.Conv2d(3, 6, 5)  # in_channels, out_channels, kernel_size
+        self.prelu = nn.PReLU(3 * 2)
         self.pool = nn.MaxPool2d(2, stride=2)  # kernel_size
         self.bn1 = nn.BatchNorm2d(6)
         self.conv2 = nn.Conv2d(6, 16, 5)
@@ -17,7 +18,7 @@ class Net(nn.Module):
         self.fc3 = nn.Linear(84, num_classes)
 
     def forward(self, x):
-        x = F.relu(self.conv1(x))
+        x = self.prelu(self.conv1(x))
         x = self.bn1(self.pool(x))
         x = F.relu(self.conv2(x))
         x = self.bn2(self.pool(x))
