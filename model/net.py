@@ -17,12 +17,18 @@ class Net(nn.Module):
         self.fc3 = nn.Linear(84, num_classes)
 
     def forward(self, x):
-        x = self.bn1(self.pool(F.relu(self.conv1(x))))
-        x = self.bn2(self.pool(F.relu(self.conv2(x))))
+        x = F.relu(self.conv1(x))
+        x = self.bn1(self.pool(x))
+        x = F.relu(self.conv2(x))
+        x = self.bn2(self.pool(x))
+
+        # Flatten the output for each image
         x = x.view(-1, 16 * 5 * 5)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
+
+        # Apply log softmax on each image's output
         return F.log_softmax(x, dim=1)
 
 
