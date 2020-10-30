@@ -11,7 +11,7 @@ mean_nums = [0.485, 0.456, 0.406]
 std_nums = [0.229, 0.224, 0.225]
 
 train_transform = transforms.Compose([
-    transforms.Resize((32, 32)),
+    transforms.RandomResizedCrop(size=32, scale=(0.9, 1.1), ratio=(0.75, 1.33)),
     transforms.RandomRotation(degrees=15),
     transforms.ColorJitter(0.4, 0.4, 0.4, 0.1),
     transforms.ToTensor(),
