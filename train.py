@@ -1,4 +1,5 @@
 from torch import nn, optim
+import json
 import torch
 
 from evaluate import evaluate
@@ -7,7 +8,21 @@ import config
 import model.net as net
 
 
-def train(model, optimizer, loss_fn, train_data_loader, val_data_loader, model_path, num_epochs):
+def train(
+        model,
+        optimizer,
+        loss_fn,
+        train_data_loader,
+        val_data_loader,
+        model_path,
+        statistics_path,
+        num_epochs):
+
+    train_accuracies = []
+    train_losses = []
+    val_accuracies = []
+    val_losses = []
+
     # Loop over the dataset multiple times
     for epoch in range(num_epochs):
         print(f'Epoch {epoch + 1}/{num_epochs}')
@@ -23,7 +38,7 @@ def train(model, optimizer, loss_fn, train_data_loader, val_data_loader, model_p
             loss.backward()
             optimizer.step()
 
-            # Print metrics
+            # Print statistics
             running_loss += loss.item()
             steps = 100
             if i % steps == steps - 1:
@@ -33,14 +48,30 @@ def train(model, optimizer, loss_fn, train_data_loader, val_data_loader, model_p
         train_accuracy, train_loss, train_num_images = evaluate(model, loss_fn, train_data_loader)
         val_accuracy, val_loss, val_num_images = evaluate(model, loss_fn, val_data_loader)
 
-        # Print metrics
+        # Print statistics
         print(f'Train\taccuracy {round(train_accuracy * 100, 2)}%\tloss {round(train_loss, 3)}\timages {train_num_images}')
         print(f'Val\taccuracy {round(val_accuracy * 100, 2)}%\tloss {round(val_loss, 3)}\timages {val_num_images}')
         print()
 
+        train_accuracies.append(train_accuracy)
+        train_losses.append(train_loss)
+        val_accuracies.append(val_accuracy)
+        val_losses.append(val_loss)
+
     # Save model
     torch.save(model.state_dict(), model_path)
-    print(f'Train finished. Model saved at {model_path}')
+
+    # Save statistics
+    with open(statistics_path, 'w') as json_file:
+        statistics = {
+            'Train Accuracy': train_accuracies,
+            'Validation Accuracy': train_losses,
+            'Train Loss': val_accuracies,
+            'Validation Loss': val_losses,
+        }
+        json.dump(statistics, json_file)
+
+    print(f'Train finished. Model saved at {model_path}. Statistics saved at {statistics_path}')
 
 
 if __name__ == '__main__':
@@ -49,4 +80,13 @@ if __name__ == '__main__':
     learning_rate = 0.001
     num_epochs = 15
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
-    train(model, optimizer, loss_fn, train_data_loader, val_data_loader, config.model_path, num_epochs)
+
+    train(
+        model,
+        optimizer,
+        loss_fn,
+        train_data_loader,
+        val_data_loader,
+        config.model_path,
+        config.statistics_path,
+        num_epochs)
