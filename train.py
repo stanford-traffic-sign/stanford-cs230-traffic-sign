@@ -23,21 +23,22 @@ def train(model, optimizer, loss_fn, train_data_loader, val_data_loader, model_p
             loss.backward()
             optimizer.step()
 
-            # Print statistics
+            # Print metrics
             running_loss += loss.item()
-
-            # Print every 200 mini-batches
-            steps = 200
-            if i % steps == 199:
+            steps = 100
+            if i % steps == steps - 1:
                 print(f'- {i + 1} mini batches\tloss {round(running_loss / steps, 3)}')
                 running_loss = 0.0
 
         train_accuracy, train_loss, train_num_images = evaluate(model, loss_fn, train_data_loader)
         val_accuracy, val_loss, val_num_images = evaluate(model, loss_fn, val_data_loader)
+
+        # Print metrics
         print(f'Train\taccuracy {round(train_accuracy * 100, 2)}%\tloss {round(train_loss, 3)}\timages {train_num_images}')
         print(f'Val\taccuracy {round(val_accuracy * 100, 2)}%\tloss {round(val_loss, 3)}\timages {val_num_images}')
         print()
 
+    # Save model
     torch.save(model.state_dict(), model_path)
     print(f'Train finished. Model saved at {model_path}')
 
