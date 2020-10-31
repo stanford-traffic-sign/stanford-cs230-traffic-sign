@@ -2,6 +2,9 @@
 .idea
 .ipynb_checkpoints
 __pycache__
+
 data
 GTSRB
+
 my_model.pth
+my_statistics.json
