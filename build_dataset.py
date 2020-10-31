@@ -3,21 +3,22 @@ from pathlib import Path
 import numpy as np
 import shutil
 
+from config import data_path, gtsrb_image_path
 from utils.data_class import class_map
 
 
-def build_dataset(class_map):
-    train_folders = sorted(glob('GTSRB/Final_Training/Images/*'))
+def build_dataset(gtsrb_image_path, data_path, class_map):
+    gtsrb_folders = sorted(glob(f'{gtsrb_image_path}/*'))
 
-    DATA_DIR = Path('data')
-    DATASETS = ['train', 'val']
+    data_dir = Path(data_path)
+    datasets = ['train', 'val']
 
-    for dataset in DATASETS:
+    for dataset in datasets:
         for class_name in class_map.values():
-            (DATA_DIR / dataset / class_name).mkdir(parents=True, exist_ok=True)
+            (data_dir / dataset / class_name).mkdir(parents=True, exist_ok=True)
 
     for class_idx, class_name in class_map.items():
-        image_paths = np.array(glob(f'{train_folders[class_idx]}/*.ppm'))
+        image_paths = np.array(glob(f'{gtsrb_folders[class_idx]}/*.ppm'))
         print(f'{class_name}: {len(image_paths)}')
         np.random.seed(1)
         np.random.shuffle(image_paths)
@@ -27,12 +28,12 @@ def build_dataset(class_map):
             # 80% of the images for training, 20% for validation
             indices_or_sections=[int(0.8 * len(image_paths))])
 
-        dataset_data = zip(DATASETS, dataset_split)
+        dataset_data = zip(datasets, dataset_split)
 
         for dataset, images in dataset_data:
             for img_path in images:
-                shutil.copy(img_path, f'{DATA_DIR}/{dataset}/{class_name}/')
+                shutil.copy(img_path, f'{data_dir}/{dataset}/{class_name}/')
 
 
 if __name__ == '__main__':
-    build_dataset(class_map)
+    build_dataset(gtsrb_image_path, data_path, class_map)

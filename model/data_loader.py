@@ -2,10 +2,12 @@ from torch.utils.data import DataLoader
 from torchvision.datasets import ImageFolder
 import torchvision.transforms as transforms
 
+from config import data_path
+
 
 BATCH_SIZE = 128
-TRAIN_DATA_PATH = './data/train/'
-VAL_DATA_PATH = './data/val/'
+TRAIN_DATA_PATH = f'{data_path}/train'
+VAL_DATA_PATH = f'{data_path}/val'
 
 mean_nums = [0.485, 0.456, 0.406]
 std_nums = [0.229, 0.224, 0.225]
