@@ -4,15 +4,19 @@ import torch
 
 from model.data_loader import val_data_loader
 from utils.data_class import class_map
+from utils.device import device
 import config
 
 
-def evaluate(model, loss_fn, data_loader):
+def evaluate(model, loss_fn, data_loader, device):
     correct = 0
     num_images = 0
     losses = []
     with torch.no_grad():
         for (images, labels) in data_loader:
+            images = images.to(device)
+            labels = labels.to(device)
+
             outputs = model(images)
             _, predicts = torch.max(outputs.data, dim=1)
             loss = loss_fn(outputs, labels)
@@ -24,11 +28,14 @@ def evaluate(model, loss_fn, data_loader):
     return accuracy, np.mean(losses), num_images
 
 
-def evaluate_by_class(model, data_loader, class_map):
+def evaluate_by_class(model, data_loader, class_map, device):
     correct = list(0. for _ in range(len(class_map)))
     num_class = list(0. for _ in range(len(class_map)))
     with torch.no_grad():
         for (images, labels) in data_loader:
+            images = images.to(device)
+            labels = labels.to(device)
+
             outputs = model(images)
             _, predicted = torch.max(outputs, 1)
             c = torch.squeeze(predicted == labels)
@@ -46,4 +53,4 @@ if __name__ == '__main__':
     model.load_state_dict(torch.load(config.model_path))
     val_accuracy, _, num_images = evaluate(model, loss_fn, val_data_loader)
     print(f'Accuracy {round(val_accuracy * 100, 2)}% ({num_images} images)')
-    evaluate_by_class(model, val_data_loader, class_map)
+    evaluate_by_class(model, val_data_loader, class_map, device)
