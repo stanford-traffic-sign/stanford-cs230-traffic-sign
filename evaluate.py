@@ -1,8 +1,8 @@
-from model.net import Net, loss_fn
 import numpy as np
 import torch
 
 from model.data_loader import val_data_loader
+from model.net import Net, loss_fn
 from utils.data_class import class_map
 from utils.device import device
 import config
