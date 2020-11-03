@@ -1,8 +1,8 @@
 import numpy as np
 import torch
 
+from model import net
 from model.data_loader import val_data_loader
-from model.net import Net, loss_fn
 from utils.data_class import class_map
 from utils.device import device
 import config
@@ -49,8 +49,12 @@ def evaluate_by_class(model, data_loader, class_map, device):
 
 
 if __name__ == '__main__':
-    model = Net()
+    model = net.Net()
+    model.to(device)
+
     model.load_state_dict(torch.load(config.model_path))
-    val_accuracy, _, num_inputs = evaluate(model, loss_fn, val_data_loader)
+
+    val_accuracy, _, num_inputs = evaluate(model, net.loss_fn, val_data_loader, device)
+
     print(f'Accuracy {round(val_accuracy * 100, 2)}% ({num_inputs} images)')
     evaluate_by_class(model, val_data_loader, class_map, device)
