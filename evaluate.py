@@ -10,33 +10,33 @@ import config
 
 def evaluate(model, loss_fn, data_loader, device):
     correct = 0
-    num_images = 0
+    num_inputs = 0
     losses = []
     with torch.no_grad():
-        for (images, labels) in data_loader:
-            images = images.to(device)
+        for (inputs, labels) in data_loader:
+            inputs = inputs.to(device)
             labels = labels.to(device)
 
-            outputs = model(images)
+            outputs = model(inputs)
             _, predicts = torch.max(outputs.data, dim=1)
             loss = loss_fn(outputs, labels)
             losses.append(loss.item())
-            num_images += labels.size(0)
+            num_inputs += labels.size(0)
             correct += torch.sum(predicts == labels).item()
 
-    accuracy = correct / num_images
-    return accuracy, np.mean(losses), num_images
+    accuracy = correct / num_inputs
+    return accuracy, np.mean(losses), num_inputs
 
 
 def evaluate_by_class(model, data_loader, class_map, device):
     correct = list(0. for _ in range(len(class_map)))
     num_class = list(0. for _ in range(len(class_map)))
     with torch.no_grad():
-        for (images, labels) in data_loader:
-            images = images.to(device)
+        for (inputs, labels) in data_loader:
+            inputs = inputs.to(device)
             labels = labels.to(device)
 
-            outputs = model(images)
+            outputs = model(inputs)
             _, predicted = torch.max(outputs, 1)
             c = torch.squeeze(predicted == labels)
             for i in range(len(labels)):
@@ -51,6 +51,6 @@ def evaluate_by_class(model, data_loader, class_map, device):
 if __name__ == '__main__':
     model = Net()
     model.load_state_dict(torch.load(config.model_path))
-    val_accuracy, _, num_images = evaluate(model, loss_fn, val_data_loader)
-    print(f'Accuracy {round(val_accuracy * 100, 2)}% ({num_images} images)')
+    val_accuracy, _, num_inputs = evaluate(model, loss_fn, val_data_loader)
+    print(f'Accuracy {round(val_accuracy * 100, 2)}% ({num_inputs} images)')
     evaluate_by_class(model, val_data_loader, class_map, device)

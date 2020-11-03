@@ -17,7 +17,7 @@ def build_dataset(gtsrb_image_path, data_path, class_map):
         for class_name in class_map.values():
             (data_dir / dataset / class_name).mkdir(parents=True, exist_ok=True)
 
-    for class_idx, class_name in class_map.items():
+    for (class_idx, class_name) in class_map.items():
         image_paths = np.array(glob(f'{gtsrb_folders[class_idx]}/*.ppm'))
         print(f'{class_name}: {len(image_paths)}')
         np.random.seed(1)
@@ -30,7 +30,7 @@ def build_dataset(gtsrb_image_path, data_path, class_map):
 
         dataset_data = zip(datasets, dataset_split)
 
-        for dataset, images in dataset_data:
+        for (dataset, images) in dataset_data:
             for img_path in images:
                 shutil.copy(img_path, f'{data_dir}/{dataset}/{class_name}/')
 

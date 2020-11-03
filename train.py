@@ -30,16 +30,16 @@ def train(
         print(f'Epoch {epoch + 1}/{num_epochs}')
         print('----------')
         running_loss = 0.0
-        for i, (batch_inputs, batch_labels) in enumerate(train_data_loader):
-            batch_inputs = batch_inputs.to(device)
-            batch_labels = batch_labels.to(device)
+        for i, (inputs, labels) in enumerate(train_data_loader):
+            inputs = inputs.to(device)
+            labels = labels.to(device)
 
             # Zero the parameter gradients
             optimizer.zero_grad()
 
             # Forward + backward + optimize
-            outputs = model(batch_inputs)
-            loss = loss_fn(outputs, batch_labels)
+            outputs = model(inputs)
+            loss = loss_fn(outputs, labels)
             loss.backward()
             optimizer.step()
 
@@ -50,12 +50,12 @@ def train(
                 print(f'- {i + 1} mini batches\tloss {round(running_loss / steps, 3)}')
                 running_loss = 0.0
 
-        train_accuracy, train_loss, train_num_images = evaluate(model, loss_fn, train_data_loader, device)
-        val_accuracy, val_loss, val_num_images = evaluate(model, loss_fn, val_data_loader, device)
+        train_accuracy, train_loss, train_num_inputs = evaluate(model, loss_fn, train_data_loader, device)
+        val_accuracy, val_loss, val_num_inputs = evaluate(model, loss_fn, val_data_loader, device)
 
         # Print statistics
-        print(f'Train\taccuracy {round(train_accuracy * 100, 2)}%\tloss {round(train_loss, 3)}\timages {train_num_images}')
-        print(f'Val\taccuracy {round(val_accuracy * 100, 2)}%\tloss {round(val_loss, 3)}\timages {val_num_images}')
+        print(f'Train\taccuracy {round(train_accuracy * 100, 2)}%\tloss {round(train_loss, 3)}\timages {train_num_inputs}')
+        print(f'Val\taccuracy {round(val_accuracy * 100, 2)}%\tloss {round(val_loss, 3)}\timages {val_num_inputs}')
         print()
 
         train_accuracies.append(train_accuracy)
