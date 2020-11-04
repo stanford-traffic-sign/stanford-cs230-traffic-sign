@@ -1,3 +1,4 @@
+from sklearn.metrics import confusion_matrix, classification_report
 import numpy as np
 import torch
 
@@ -9,7 +10,6 @@ import config
 
 
 def evaluate(model, loss_fn, data_loader, device):
-    # set model to evaluation mode
     model.eval()
 
     correct = 0
@@ -33,7 +33,6 @@ def evaluate(model, loss_fn, data_loader, device):
 
 
 def evaluate_by_class(model, data_loader, class_map, device):
-    # set model to evaluation mode
     model.eval()
 
     correct = list(0. for _ in range(len(class_map)))
@@ -45,15 +44,35 @@ def evaluate_by_class(model, data_loader, class_map, device):
             labels = labels.to(device)
 
             outputs = model(inputs)
-            _, predicted = torch.max(outputs, 1)
-            c = torch.squeeze(predicted == labels)
+            _, preds = torch.max(outputs, 1)
+            c = torch.squeeze(preds == labels)
             for i in range(len(labels)):
                 label = labels[i]
                 correct[label] += c[i].item()
                 num_class[label] += 1
 
     for i in range(len(class_map)):
-        print(f'- {class_map[i]}\t{round(100 * correct[i] / num_class[i], 1)}%')
+        print(f'- {class_map[i]}\t{round(100 * correct[i] / num_class[i], 2)}%')
+
+
+def get_predictions(model, data_loader):
+    model = model.eval()
+
+    predictions = []
+    real_values = []
+
+    with torch.no_grad():
+        for (inputs, labels) in data_loader:
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+
+            outputs = model(inputs)
+            _, preds = torch.max(outputs, 1)
+            predictions.extend(preds)
+            real_values.extend(labels)
+    predictions = torch.as_tensor(predictions).cpu()
+    real_values = torch.as_tensor(real_values).cpu()
+    return real_values, predictions
 
 
 if __name__ == '__main__':
@@ -66,3 +85,6 @@ if __name__ == '__main__':
 
     print(f'Accuracy {round(val_accuracy * 100, 2)}% ({num_inputs} images)')
     evaluate_by_class(model, val_data_loader, class_map, device)
+
+    y_true, y_pred = get_predictions(model, val_data_loader)
+    print(classification_report(y_true, y_pred, target_names=class_map.values(), digits=4))
