@@ -9,9 +9,13 @@ import config
 
 
 def evaluate(model, loss_fn, data_loader, device):
+    # set model to evaluation mode
+    model.eval()
+
     correct = 0
     num_inputs = 0
     losses = []
+
     with torch.no_grad():
         for (inputs, labels) in data_loader:
             inputs = inputs.to(device)
@@ -29,8 +33,12 @@ def evaluate(model, loss_fn, data_loader, device):
 
 
 def evaluate_by_class(model, data_loader, class_map, device):
+    # set model to evaluation mode
+    model.eval()
+
     correct = list(0. for _ in range(len(class_map)))
     num_class = list(0. for _ in range(len(class_map)))
+
     with torch.no_grad():
         for (inputs, labels) in data_loader:
             inputs = inputs.to(device)
