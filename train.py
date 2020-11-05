@@ -1,5 +1,6 @@
 from torch import nn, optim
 import json
+import replicate
 import torch
 
 from evaluate import evaluate
@@ -19,6 +20,8 @@ def train(
         statistics_path,
         num_epochs,
         device):
+
+    experiment = replicate.init(path='.')
 
     train_accuracies = []
     train_losses = []
@@ -63,8 +66,18 @@ def train(
         val_accuracies.append(val_accuracy)
         val_losses.append(val_loss)
 
-    # Save model
-    torch.save(model.state_dict(), model_path)
+        # Save model
+        torch.save(model.state_dict(), model_path)
+        # Save model weights and metrics
+        experiment.checkpoint(
+            path=model_path,
+            step=epoch,
+            metrics={
+                'Train Accuracy': train_accuracy,
+                'Train Loss': train_loss,
+                'Validation Accuracy': val_accuracy,
+                'Validation Loss': val_loss,
+            })
 
     # Save statistics
     with open(statistics_path, 'w') as json_file:
