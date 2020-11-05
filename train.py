@@ -70,8 +70,8 @@ def train(
     with open(statistics_path, 'w') as json_file:
         statistics = {
             'Train Accuracy': train_accuracies,
-            'Validation Accuracy': train_losses,
-            'Train Loss': val_accuracies,
+            'Train Loss': train_losses,
+            'Validation Accuracy': val_accuracies,
             'Validation Loss': val_losses,
         }
         json.dump(statistics, json_file)
