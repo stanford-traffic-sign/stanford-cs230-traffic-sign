@@ -2,7 +2,9 @@ from torch.utils.data import DataLoader
 from torchvision.datasets import ImageFolder
 import torchvision.transforms as transforms
 
+
 from config import data_path
+from lib.autoaugment import ImageNetPolicy
 
 
 BATCH_SIZE = 128
@@ -14,8 +16,9 @@ std_nums = [0.229, 0.224, 0.225]
 
 train_transform = transforms.Compose([
     transforms.RandomResizedCrop(size=32, scale=(0.9, 1.1), ratio=(0.75, 1.33)),
-    transforms.RandomRotation(degrees=15),
-    transforms.ColorJitter(0.5, 0.5, 0.5, 0.1),
+    # transforms.RandomRotation(degrees=15),
+    # transforms.ColorJitter(0.5, 0.5, 0.5, 0.1),
+    ImageNetPolicy(),
     transforms.ToTensor(),
     transforms.Normalize(mean=mean_nums,  std=std_nums),
 ])
