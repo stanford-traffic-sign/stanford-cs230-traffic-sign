@@ -23,11 +23,11 @@ class ConvNet(nn.Module):
     def forward(self, x):
         x = self.prelu(self.conv1(x))
         x = self.prelu(self.conv2(x))
+        x = self.conv_drop(x)
         x = self.bn1(self.pool(x))
-        x = self.conv_drop(x)
         x = F.relu(self.conv3(x))
-        x = self.bn2(self.pool(x))
         x = self.conv_drop(x)
+        x = self.bn2(self.pool(x))
 
         # Flatten the output for each image
         x = x.view(-1, 16 * 5 * 5)
