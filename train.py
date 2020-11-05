@@ -81,7 +81,7 @@ def train(
 
 if __name__ == '__main__':
     learning_rate = 0.001
-    num_epochs = 15
+    num_epochs = 50
 
     model = net.Net()
     model.to(device)
