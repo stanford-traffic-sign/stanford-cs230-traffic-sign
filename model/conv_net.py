@@ -8,13 +8,13 @@ from utils.data_class import num_classes
 class ConvNet(nn.Module):
     def __init__(self):
         super(ConvNet, self).__init__()
-        self.conv1 = nn.Conv2d(3, 8, 5)  # in_channels, out_channels, kernel_size
+        self.conv1 = nn.Conv2d(3, 8, kernel_size=5)  # in_channels, out_channels
         self.prelu = nn.PReLU(8)
-        self.conv2 = nn.Conv2d(8, 8, 1)
+        self.conv2 = nn.Conv2d(8, 8, kernel_size=1)
         self.pool = nn.MaxPool2d(2, stride=2)  # kernel_size
         self.bn1 = nn.BatchNorm2d(8)
         self.conv_drop = nn.Dropout2d()
-        self.conv3 = nn.Conv2d(8, 16, 5)
+        self.conv3 = nn.Conv2d(8, 16, kernel_size=5)
         self.bn2 = nn.BatchNorm2d(16)
         self.fc1 = nn.Linear(16 * 5 * 5, 120)  # in_features, out_features
         self.fc2 = nn.Linear(120, 84)
