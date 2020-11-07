@@ -54,8 +54,8 @@ class ConvNet(nn.Module):
         theta = self.fc_loc(xs)
         theta = theta.view(-1, 2, 3)
 
-        grid = F.affine_grid(theta, x.size())
-        x = F.grid_sample(x, grid)
+        grid = F.affine_grid(theta, x.size(), align_corners=False)
+        x = F.grid_sample(x, grid, align_corners=False)
         return x
 
     def forward(self, x):
