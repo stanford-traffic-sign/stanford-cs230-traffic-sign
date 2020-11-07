@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-# from model.res_net import ResNet, BasicBlock
 from utils.data_class import num_classes
 
 
@@ -34,9 +33,9 @@ class ConvNet(nn.Module):
         )
 
         # Regressor for the 3 * 2 affine matrix
-        # input units:  16 * (((((32 / 2) - 4) / 2) - 2)) ** 2 = 16 * 4 * 4
-        #               /    \________________________/
-        #           channels     output tensor size
+        # Input units: 16 * (((((32 / 2) - 4) / 2) - 2)) ** 2 = 16 * 4 * 4
+        #              /    \________________________/
+        #          channels     output tensor size
         self.fc_loc = nn.Sequential(
             nn.Linear(16 * 4 * 4, 84),
             nn.ReLU(True),
