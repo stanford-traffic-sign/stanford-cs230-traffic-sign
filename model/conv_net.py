@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -20,7 +21,46 @@ class ConvNet(nn.Module):
         self.fc2 = nn.Linear(120, 84)
         self.fc3 = nn.Linear(84, num_classes)
 
+        # Spatial transformer localization-network
+        self.localization = nn.Sequential(
+            nn.Conv2d(3, 8, kernel_size=7),
+            nn.MaxPool2d(2, stride=2),
+            nn.ReLU(True),
+            nn.Conv2d(8, 16, kernel_size=5),
+            nn.MaxPool2d(2, stride=2),
+            nn.ReLU(True),
+        )
+
+        # Regressor for the 3 * 2 affine matrix
+        # input units:  16 * (((((32 / 2) - 4) / 2) - 2)) ** 2 = 16 * 4 * 4
+        #               /    \________________________/
+        #           channels     output tensor size
+        self.fc_loc = nn.Sequential(
+            nn.Linear(16 * 4 * 4, 84),
+            nn.ReLU(True),
+            nn.Linear(84, 3 * 2),
+        )
+
+        # Initialize the weights/bias with identity transformation
+        self.fc_loc[2].weight.data.zero_()
+        self.fc_loc[2].bias.data.copy_(torch.tensor([1, 0, 0, 0, 1, 0], dtype=torch.float))
+
+    # Spatial transformer network forward function
+    def stn(self, x):
+        xs = self.localization(x)
+        xs = xs.view(-1, 16 * 4 * 4)
+        theta = self.fc_loc(xs)
+        theta = theta.view(-1, 2, 3)
+
+        grid = F.affine_grid(theta, x.size())
+        x = F.grid_sample(x, grid)
+        return x
+
     def forward(self, x):
+        # Transform the input
+        x = self.stn(x)
+
+        # Perform the usual forward pass
         x = self.prelu(self.conv1(x))
         x = self.prelu(self.conv2(x))
         x = self.conv_drop(x)
