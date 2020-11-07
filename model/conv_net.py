@@ -50,7 +50,7 @@ class ConvNet(nn.Module):
     # Spatial transformer network forward function
     def stn(self, x):
         xs = self.localization(x)
-        xs = xs.view(-1, 16 * 4 * 4)
+        xs = xs.view(-1, 16 * 4 * 4)  # 16 * 4 * 4 refers to self.fc_loc
         theta = self.fc_loc(xs)
         theta = theta.view(-1, 2, 3)
 
@@ -72,7 +72,7 @@ class ConvNet(nn.Module):
         x = self.bn2(self.pool(x))
 
         # Flatten the output for each image
-        x = x.view(-1, 16 * 5 * 5)
+        x = x.view(-1, 16 * 5 * 5)  # 16 * 5 * 5 refers to self.fc1
         x = F.relu(self.fc1(x))
         x = F.dropout(x, training=self.training)
         x = F.relu(self.fc2(x))
