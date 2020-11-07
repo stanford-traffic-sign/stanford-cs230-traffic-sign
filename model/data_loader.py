@@ -7,7 +7,7 @@ from config import data_path
 from lib.autoaugment import ImageNetPolicy
 
 
-BATCH_SIZE = 128
+BATCH_SIZE = 512
 TRAIN_DATA_PATH = f'{data_path}/train'
 VAL_DATA_PATH = f'{data_path}/val'
 
