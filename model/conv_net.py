@@ -12,12 +12,15 @@ class ConvNet(nn.Module):
 
         self.conv1 = nn.Conv2d(self.channel, 8, kernel_size=5)  # in_channels, out_channels
         self.prelu = nn.PReLU(8)
+
         self.conv2 = nn.Conv2d(8, 8, kernel_size=1)
         self.pool = nn.MaxPool2d(2, stride=2)  # kernel_size
-        self.bn1 = nn.BatchNorm2d(8)
+        self.bn2 = nn.BatchNorm2d(8)
         self.conv_drop = nn.Dropout2d()
+
         self.conv3 = nn.Conv2d(8, 16, kernel_size=5)
-        self.bn2 = nn.BatchNorm2d(16)
+        self.bn3 = nn.BatchNorm2d(16)
+
         self.fc1 = nn.Linear(16 * 5 * 5, 120)  # in_features, out_features
         self.fc2 = nn.Linear(120, 84)
         self.fc3 = nn.Linear(84, num_classes)
@@ -63,12 +66,14 @@ class ConvNet(nn.Module):
 
         # Perform the usual forward pass
         x = self.prelu(self.conv1(x))
+        
         x = self.prelu(self.conv2(x))
         x = self.conv_drop(x)
-        x = self.bn1(self.pool(x))
+        x = self.bn2(self.pool(x))
+
         x = F.relu(self.conv3(x))
         x = self.conv_drop(x)
-        x = self.bn2(self.pool(x))
+        x = self.bn3(self.pool(x))
 
         # Flatten the output for each image
         x = x.view(-1, 16 * 5 * 5)  # 16 * 5 * 5 refers to self.fc1
