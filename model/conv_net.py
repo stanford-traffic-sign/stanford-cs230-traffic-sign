@@ -9,7 +9,9 @@ from utils.data_class import num_classes
 class ConvNet(nn.Module):
     def __init__(self):
         super(ConvNet, self).__init__()
-        self.conv1 = nn.Conv2d(3, 8, kernel_size=5)  # in_channels, out_channels
+        self.channel = 3
+
+        self.conv1 = nn.Conv2d(self.channel, 8, kernel_size=5)  # in_channels, out_channels
         self.prelu = nn.PReLU(8)
         self.conv2 = nn.Conv2d(8, 8, kernel_size=1)
         self.pool = nn.MaxPool2d(2, stride=2)  # kernel_size
@@ -23,7 +25,7 @@ class ConvNet(nn.Module):
 
         # Spatial transformer localization-network
         self.localization = nn.Sequential(
-            nn.Conv2d(3, 8, kernel_size=7),
+            nn.Conv2d(self.channel, 8, kernel_size=7),
             nn.MaxPool2d(2, stride=2),
             nn.ReLU(True),
             nn.Conv2d(8, 16, kernel_size=5),
