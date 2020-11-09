@@ -32,4 +32,4 @@ train_data = ImageFolder(root=TRAIN_DATA_PATH, transform=train_transform)
 train_data_loader = DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
 
 val_data = ImageFolder(root=VAL_DATA_PATH, transform=val_transform)
-val_data_loader = DataLoader(val_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
+val_data_loader = DataLoader(val_data, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
