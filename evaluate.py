@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import torch
+import torch.nn.functional as F
 
 from model import net
 from model.data_loader import val_data_loader
@@ -12,26 +13,73 @@ from utils.device import device
 import config
 
 
+# def evaluate(model, loss_fn, data_loader, device):
+#     model.eval()
+#
+#     accuracy = 0
+#     correct = 0
+#     num_inputs = 0
+#     losses = []
+#
+#     with torch.no_grad():
+#         for (input1, input2, labels) in data_loader:
+#             input1 = input1.to(device)
+#             input2 = input2.to(device)
+#             labels = labels.to(device)
+#
+#             outputs = model(input1, input2)
+#             # _, predicts = torch.max(outputs.data, dim=1)
+#
+#             for j in range(outputs.size()[0]):
+#                 if outputs[j] <= 0.5 and labels[j] == 0:
+#                     correct += 1
+#                 if outputs[j] > 0.5 and labels[j] == 1:
+#                     correct += 1
+#
+#             total = labels.size(0)
+#             accuracy += correct / total
+#             correct = 0
+#
+#             loss = loss_fn(outputs, labels)
+#             # loss = loss_fn(output1, output2, labels)
+#             losses.append(loss.item())
+#             num_inputs += labels.size(0)
+#
+#     accuracy = correct / total
+#     return accuracy, np.mean(losses), num_inputs
+
+
 def evaluate(model, loss_fn, data_loader, device):
     model.eval()
 
     correct = 0
+    total = 0
     num_inputs = 0
     losses = []
 
     with torch.no_grad():
-        for (inputs, labels) in data_loader:
-            inputs = inputs.to(device)
+        for (input1, input2, labels) in data_loader:
+            input1 = input1.to(device)
+            input2 = input2.to(device)
             labels = labels.to(device)
 
-            outputs = model(inputs)
-            _, predicts = torch.max(outputs.data, dim=1)
-            loss = loss_fn(outputs, labels)
+            output1, output2 = model(input1, input2)
+            # _, predicts = torch.max(outputs.data, dim=1)
+            dist = F.pairwise_distance(output1, output2)
+            dist = dist.cpu()
+            for j in range(dist.size()[0]):
+                total += 1
+                if ((dist.data.numpy()[j] < 0.5)):
+                    if labels.cpu().data.numpy()[j] == 1:
+                        correct += 1
+                else:
+                    if labels.cpu().data.numpy()[j] == 0:
+                        correct += 1
+            loss = loss_fn(output1, output2, labels)
             losses.append(loss.item())
             num_inputs += labels.size(0)
-            correct += torch.sum(predicts == labels).item()
 
-    accuracy = correct / num_inputs
+    accuracy = correct / total
     return accuracy, np.mean(losses), num_inputs
 
 

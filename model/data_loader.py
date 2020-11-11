@@ -5,9 +5,10 @@ import torchvision.transforms as transforms
 
 from config import data_path
 from lib.autoaugment import ImageNetPolicy
+from model.siamese_dataset import SiameseNetworkDataset
 
 
-BATCH_SIZE = 512
+BATCH_SIZE = 128
 TRAIN_DATA_PATH = f'{data_path}/train'
 VAL_DATA_PATH = f'{data_path}/val'
 
@@ -28,8 +29,17 @@ val_transform = transforms.Compose([
     transforms.Normalize(mean=mean_nums,  std=std_nums),
 ])
 
+
 train_data = ImageFolder(root=TRAIN_DATA_PATH, transform=train_transform)
-train_data_loader = DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
+train_siamese_data = SiameseNetworkDataset(
+    imageFolderDataset=train_data,
+    transform=train_transform,
+    should_invert=False)
+train_data_loader = DataLoader(train_siamese_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
 
 val_data = ImageFolder(root=VAL_DATA_PATH, transform=val_transform)
-val_data_loader = DataLoader(val_data, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
+val_siamese_data = SiameseNetworkDataset(
+    imageFolderDataset=val_data,
+    transform=val_transform,
+    should_invert=False)
+val_data_loader = DataLoader(val_siamese_data, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)

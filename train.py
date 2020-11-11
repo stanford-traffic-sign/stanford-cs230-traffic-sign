@@ -30,16 +30,18 @@ def train(
         print(f'Epoch {epoch + 1}/{num_epochs}')
         print('----------')
         running_loss = 0.0
-        for i, (inputs, labels) in enumerate(train_data_loader):
-            inputs = inputs.to(device)
+        for i, (input1, input2, labels) in enumerate(train_data_loader, 0):
+            input1 = input1.to(device)
+            input2 = input2.to(device)
             labels = labels.to(device)
 
             # Zero the parameter gradients
             optimizer.zero_grad()
 
             # Forward + backward + optimize
-            outputs = model(inputs)
-            loss = loss_fn(outputs, labels)
+            output1, output2 = model(input1, input2)
+            loss = loss_fn(output1, output2, labels)
+            # loss = loss_fn(outputs, labels)
             loss.backward()
             optimizer.step()
 
@@ -86,7 +88,8 @@ if __name__ == '__main__':
     model = net.Net()
     model.to(device)
 
-    loss_fn = net.loss_fn
+    # loss_fn = net.loss_fn
+    loss_fn = net.ContrastiveLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
     train(
