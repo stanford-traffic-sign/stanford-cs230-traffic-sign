@@ -38,8 +38,8 @@ def evaluate(model, loss_fn, data_loader, device):
 def get_predictions(model, data_loader):
     model = model.eval()
 
-    predictions = []
-    real_values = []
+    y_true = []
+    y_pred = []
 
     with torch.no_grad():
         for (inputs, labels) in data_loader:
@@ -48,11 +48,12 @@ def get_predictions(model, data_loader):
 
             outputs = model(inputs)
             _, preds = torch.max(outputs, 1)
-            predictions.extend(preds)
-            real_values.extend(labels)
-    predictions = torch.as_tensor(predictions).cpu()
-    real_values = torch.as_tensor(real_values).cpu()
-    return real_values, predictions
+            y_true.extend(labels)
+            y_pred.extend(preds)
+
+    y_true = torch.as_tensor(y_true).cpu()
+    y_pred = torch.as_tensor(y_pred).cpu()
+    return y_true, y_pred
 
 
 def show_confusion_matrix(confusion_matrix, class_names):
