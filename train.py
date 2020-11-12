@@ -20,7 +20,8 @@ def train(
         model_path,
         statistics_path,
         num_epochs,
-        device):
+        device,
+        writer):
 
     train_accuracies = []
     train_losses = []
@@ -45,7 +46,7 @@ def train(
             loss.backward()
             optimizer.step()
 
-            # Print statistics
+            # Log statistics
             running_loss += loss.item()
             steps = 50
             if i % steps == steps - 1:
@@ -69,6 +70,11 @@ def train(
         print(f'Train\taccuracy {round(train_accuracy * 100, 2)}%\tloss {round(train_loss, 3)}\timages {train_num_inputs}')
         print(f'Val\taccuracy {round(val_accuracy * 100, 2)}%\tloss {round(val_loss, 3)}\timages {val_num_inputs}')
         print()
+
+        writer.add_scalar('Loss/train', train_loss, epoch)
+        writer.add_scalar('Loss/val', val_loss, epoch)
+        writer.add_scalar('Accuracy/train', train_accuracy, epoch)
+        writer.add_scalar('Accuracy/val', val_accuracy, epoch)
 
         train_accuracies.append(train_accuracy)
         train_losses.append(train_loss)
@@ -107,4 +113,7 @@ if __name__ == '__main__':
         config.model_path,
         config.statistics_path,
         num_epochs,
-        device)
+        device,
+        writer)
+
+    writer.close()
