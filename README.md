@@ -32,6 +32,12 @@ Summarize model
 python summarize_model.py
 ```
 
+Visualize model
+
+```bash
+python summarize_model.py
+```
+
 TensorBoard
 
 ```bash
