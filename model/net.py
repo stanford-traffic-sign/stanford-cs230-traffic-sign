@@ -13,4 +13,5 @@ def Net():
     # return ResNet(Bottleneck, [3, 8, 36, 3])  # ResNet152
 
 
+net = Net()
 loss_fn = nn.CrossEntropyLoss()

@@ -5,15 +5,15 @@ import pandas as pd
 import seaborn as sns
 import torch
 
-from model import net
+from model.net import net
 from model.data_loader import val_data_loader
 from utils.data_class import class_map
 from utils.device import device
 import config
 
 
-def evaluate(model, loss_fn, data_loader, device):
-    model.eval()
+def evaluate(net, loss_fn, data_loader, device):
+    net.eval()
 
     correct = 0
     num_inputs = 0
@@ -24,7 +24,7 @@ def evaluate(model, loss_fn, data_loader, device):
             inputs = inputs.to(device)
             labels = labels.to(device)
 
-            outputs = model(inputs)
+            outputs = net(inputs)
             _, predicts = torch.max(outputs.data, dim=1)
             loss = loss_fn(outputs, labels)
             losses.append(loss.item())
@@ -35,8 +35,8 @@ def evaluate(model, loss_fn, data_loader, device):
     return accuracy, np.mean(losses), num_inputs
 
 
-def get_predictions(model, data_loader):
-    model = model.eval()
+def get_predictions(net, data_loader):
+    net = net.eval()
 
     y_true = []
     y_pred = []
@@ -46,7 +46,7 @@ def get_predictions(model, data_loader):
             inputs = inputs.to(device)
             labels = labels.to(device)
 
-            outputs = model(inputs)
+            outputs = net(inputs)
             _, preds = torch.max(outputs, 1)
             y_true.extend(labels)
             y_pred.extend(preds)
@@ -78,15 +78,14 @@ def show_confusion_matrix(confusion_matrix, class_names):
 
 
 if __name__ == '__main__':
-    model = net.Net()
-    model.to(device)
+    net.to(device)
 
-    model.load_state_dict(torch.load(config.model_path))
-    val_accuracy, _, num_inputs = evaluate(model, net.loss_fn, val_data_loader, device)
+    net.load_state_dict(torch.load(config.model_path))
+    val_accuracy, _, num_inputs = evaluate(net, net.loss_fn, val_data_loader, device)
 
     print(f'Accuracy {round(val_accuracy * 100, 2)}% ({num_inputs} images)')
 
-    y_true, y_pred = get_predictions(model, val_data_loader)
+    y_true, y_pred = get_predictions(net, val_data_loader)
     print(classification_report(y_true, y_pred, target_names=class_map.values(), digits=4))
 
     # cm = confusion_matrix(y_true, y_pred)
