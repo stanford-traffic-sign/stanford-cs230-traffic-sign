@@ -25,7 +25,7 @@ def evaluate(net, loss_fn, data_loader, device):
             labels = labels.to(device)
 
             outputs = net(inputs)
-            _, predicts = torch.max(outputs.data, dim=1)
+            _, predicts = torch.max(outputs, dim=1)
             loss = loss_fn(outputs, labels)
             losses.append(loss.item())
             num_inputs += labels.size(0)
@@ -47,7 +47,7 @@ def get_predictions(net, data_loader):
             labels = labels.to(device)
 
             outputs = net(inputs)
-            _, preds = torch.max(outputs, 1)
+            _, preds = torch.max(outputs, dim=1)
             y_true.extend(labels)
             y_pred.extend(preds)
 
