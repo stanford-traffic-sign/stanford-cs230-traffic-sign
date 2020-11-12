@@ -2,12 +2,11 @@ from torch.utils.data import DataLoader
 from torchvision.datasets import ImageFolder
 import torchvision.transforms as transforms
 
-
 from config import data_path
 from lib.autoaugment import ImageNetPolicy
 
 
-BATCH_SIZE = 512
+BATCH_SIZE = 128
 TRAIN_DATA_PATH = f'{data_path}/train'
 VAL_DATA_PATH = f'{data_path}/val'
 

@@ -4,13 +4,15 @@ import torch
 
 from evaluate import evaluate
 from model.data_loader import train_data_loader, val_data_loader
+from model.net import net, loss_fn
 from utils.device import device
+from utils.tensorboard import plot_classes_preds
+from utils.writer import writer
 import config
-import model.net as net
 
 
 def train(
-        model,
+        net,
         optimizer,
         loss_fn,
         train_data_loader,
@@ -18,7 +20,8 @@ def train(
         model_path,
         statistics_path,
         num_epochs,
-        device):
+        device,
+        writer):
 
     train_accuracies = []
     train_losses = []
@@ -38,25 +41,40 @@ def train(
             optimizer.zero_grad()
 
             # Forward + backward + optimize
-            outputs = model(inputs)
+            outputs = net(inputs)
             loss = loss_fn(outputs, labels)
             loss.backward()
             optimizer.step()
 
-            # Print statistics
+            # Log statistics
             running_loss += loss.item()
-            steps = 100
+            steps = 50
             if i % steps == steps - 1:
-                print(f'- {i + 1} mini batches\tloss {round(running_loss / steps, 3)}')
+                # Log the running loss
+                # print(f'- {i + 1} mini batches\tloss {round(running_loss / steps, 3)}')
+                writer.add_scalar('training loss',
+                                  running_loss / steps,
+                                  epoch * len(train_data_loader) + i)
+
+                # Log a Matplotlib Figure showing the model's predictions on a random mini-batch
+                writer.add_figure('predictions vs. actuals',
+                                  plot_classes_preds(net, inputs, labels),
+                                  global_step=epoch * len(train_data_loader) + i)
+
                 running_loss = 0.0
 
-        train_accuracy, train_loss, train_num_inputs = evaluate(model, loss_fn, train_data_loader, device)
-        val_accuracy, val_loss, val_num_inputs = evaluate(model, loss_fn, val_data_loader, device)
+        train_accuracy, train_loss, train_num_inputs = evaluate(net, loss_fn, train_data_loader, device)
+        val_accuracy, val_loss, val_num_inputs = evaluate(net, loss_fn, val_data_loader, device)
 
         # Print statistics
         print(f'Train\taccuracy {round(train_accuracy * 100, 2)}%\tloss {round(train_loss, 3)}\timages {train_num_inputs}')
         print(f'Val\taccuracy {round(val_accuracy * 100, 2)}%\tloss {round(val_loss, 3)}\timages {val_num_inputs}')
         print()
+
+        writer.add_scalar('Loss/train', train_loss, epoch)
+        writer.add_scalar('Loss/val', val_loss, epoch)
+        writer.add_scalar('Accuracy/train', train_accuracy, epoch)
+        writer.add_scalar('Accuracy/val', val_accuracy, epoch)
 
         train_accuracies.append(train_accuracy)
         train_losses.append(train_loss)
@@ -64,7 +82,7 @@ def train(
         val_losses.append(val_loss)
 
     # Save model
-    torch.save(model.state_dict(), model_path)
+    torch.save(net.state_dict(), model_path)
 
     # Save statistics
     with open(statistics_path, 'w') as json_file:
@@ -83,14 +101,11 @@ if __name__ == '__main__':
     learning_rate = 0.001
     num_epochs = 50
 
-    model = net.Net()
-    model.to(device)
-
-    loss_fn = net.loss_fn
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+    net.to(device)
+    optimizer = optim.Adam(net.parameters(), lr=learning_rate)
 
     train(
-        model,
+        net,
         optimizer,
         loss_fn,
         train_data_loader,
@@ -98,4 +113,7 @@ if __name__ == '__main__':
         config.model_path,
         config.statistics_path,
         num_epochs,
-        device)
+        device,
+        writer)
+
+    writer.close()

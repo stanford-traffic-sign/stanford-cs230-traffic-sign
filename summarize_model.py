@@ -1,8 +1,6 @@
 from torchsummary import summary
 
-import model.net as net
-
+from model.net import net
 
 if __name__ == '__main__':
-    model = net.Net()
-    summary(model, (3, 32, 32))
+    summary(net, (3, 32, 32))

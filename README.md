@@ -37,3 +37,9 @@ Visualize statistics
 ```bash
 python visualize.py
 ```
+
+TensorBoard
+
+```bash
+tensorboard --logdir=runs
+```
