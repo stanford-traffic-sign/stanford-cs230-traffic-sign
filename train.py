@@ -6,6 +6,8 @@ from evaluate import evaluate
 from model.data_loader import train_data_loader, val_data_loader
 from model.net import net, loss_fn
 from utils.device import device
+from utils.tensorboard import plot_classes_preds
+from utils.writer import writer
 import config
 
 
@@ -45,10 +47,19 @@ def train(
 
             # Print statistics
             running_loss += loss.item()
-            steps = 100
+            steps = 50
             if i % steps == steps - 1:
                 # Log the running loss
-                print(f'- {i + 1} mini batches\tloss {round(running_loss / steps, 3)}')
+                # print(f'- {i + 1} mini batches\tloss {round(running_loss / steps, 3)}')
+                writer.add_scalar('training loss',
+                                  running_loss / steps,
+                                  epoch * len(train_data_loader) + i)
+
+                # Log a Matplotlib Figure showing the model's predictions on a random mini-batch
+                writer.add_figure('predictions vs. actuals',
+                                  plot_classes_preds(net, inputs, labels),
+                                  global_step=epoch * len(train_data_loader) + i)
+
                 running_loss = 0.0
 
         train_accuracy, train_loss, train_num_inputs = evaluate(net, loss_fn, train_data_loader, device)
