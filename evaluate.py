@@ -5,8 +5,8 @@ import pandas as pd
 import seaborn as sns
 import torch
 
-from model.net import net
 from model.data_loader import val_data_loader
+from model.net import loss_fn, net
 from utils.data_class import class_map
 from utils.device import device
 import config
@@ -81,7 +81,7 @@ if __name__ == '__main__':
     net.to(device)
 
     net.load_state_dict(torch.load(config.model_path))
-    val_accuracy, _, num_inputs = evaluate(net, net.loss_fn, val_data_loader, device)
+    val_accuracy, _, num_inputs = evaluate(net, loss_fn, val_data_loader, device)
 
     print(f'Accuracy {round(val_accuracy * 100, 2)}% ({num_inputs} images)')
 

@@ -3,7 +3,7 @@ import torch
 
 from evaluate import evaluate
 from model.data_loader import train_data_loader, val_data_loader
-from model.net import net, loss_fn
+from model.net import loss_fn, net
 from utils.device import device
 from utils.tensorboard import plot_classes_preds
 from utils.writer import writer
