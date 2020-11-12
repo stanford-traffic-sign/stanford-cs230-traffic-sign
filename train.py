@@ -1,5 +1,4 @@
 from torch import nn, optim
-import json
 import torch
 
 from evaluate import evaluate
@@ -18,15 +17,9 @@ def train(
         train_data_loader,
         val_data_loader,
         model_path,
-        statistics_path,
         num_epochs,
         device,
         writer):
-
-    train_accuracies = []
-    train_losses = []
-    val_accuracies = []
-    val_losses = []
 
     # Loop over the dataset multiple times
     for epoch in range(num_epochs):
@@ -66,7 +59,7 @@ def train(
         train_accuracy, train_loss, train_num_inputs = evaluate(net, loss_fn, train_data_loader, device)
         val_accuracy, val_loss, val_num_inputs = evaluate(net, loss_fn, val_data_loader, device)
 
-        # Print statistics
+        # Log statistics
         print(f'Train\taccuracy {round(train_accuracy * 100, 2)}%\tloss {round(train_loss, 3)}\timages {train_num_inputs}')
         print(f'Val\taccuracy {round(val_accuracy * 100, 2)}%\tloss {round(val_loss, 3)}\timages {val_num_inputs}')
         print()
@@ -84,17 +77,7 @@ def train(
     # Save model
     torch.save(net.state_dict(), model_path)
 
-    # Save statistics
-    with open(statistics_path, 'w') as json_file:
-        statistics = {
-            'Train Accuracy': train_accuracies,
-            'Train Loss': train_losses,
-            'Validation Accuracy': val_accuracies,
-            'Validation Loss': val_losses,
-        }
-        json.dump(statistics, json_file)
-
-    print(f'Train finished. Model saved at {model_path}. Statistics saved at {statistics_path}')
+    print(f'Train finished. Model saved at {model_path}.')
 
 
 if __name__ == '__main__':
@@ -111,7 +94,6 @@ if __name__ == '__main__':
         train_data_loader,
         val_data_loader,
         config.model_path,
-        config.statistics_path,
         num_epochs,
         device,
         writer)
