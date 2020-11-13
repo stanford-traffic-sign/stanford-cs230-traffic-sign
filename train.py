@@ -69,11 +69,6 @@ def train(
         writer.add_scalar('Accuracy/train', train_accuracy, epoch)
         writer.add_scalar('Accuracy/val', val_accuracy, epoch)
 
-        train_accuracies.append(train_accuracy)
-        train_losses.append(train_loss)
-        val_accuracies.append(val_accuracy)
-        val_losses.append(val_loss)
-
     # Save model
     torch.save(net.state_dict(), model_path)
 
