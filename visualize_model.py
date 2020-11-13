@@ -6,7 +6,7 @@ from utils.writer import writer
 
 
 def show_image_grid(writer, images):
-    img_grid = torchvision.utils.make_grid(images)
+    img_grid = torchvision.utils.make_grid(images, nrow=16)
     # matplotlib_imshow(img_grid, one_channel=False)
     writer.add_image('gtsrb_images', img_grid)
 
