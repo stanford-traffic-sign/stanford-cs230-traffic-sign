@@ -71,8 +71,8 @@ def show_confusion_matrix(confusion_matrix, class_names):
     hmap = sns.heatmap(df_cm, fmt='')
     hmap.yaxis.set_ticklabels(hmap.yaxis.get_ticklabels(), rotation=0, ha='right')
     hmap.xaxis.set_ticklabels(hmap.xaxis.get_ticklabels(), rotation=90, ha='right')
-    plt.ylabel('True Sign')
-    plt.xlabel('Predicted Sign')
+    plt.ylabel('True Traffic Sign')
+    plt.xlabel('Predicted Traffic Sign')
 
 
 if __name__ == '__main__':
