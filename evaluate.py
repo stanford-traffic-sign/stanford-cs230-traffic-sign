@@ -85,6 +85,8 @@ if __name__ == '__main__':
     y_true, y_pred = get_predictions(net, val_data_loader)
     print(classification_report(y_true, y_pred, target_names=class_map.values(), digits=4))
 
+    plt.figure(figsize=(9, 7))
+    plt.subplots_adjust(left=0.30, right=0.98, top=0.99, bottom=0.32)
     cm = confusion_matrix(y_true, y_pred)
     show_confusion_matrix(cm, class_map.values())
     plt.show()
