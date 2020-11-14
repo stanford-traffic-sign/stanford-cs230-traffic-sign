@@ -21,6 +21,8 @@ def train(
         device,
         writer):
 
+    max_val_accuracy = 0.0
+
     # Loop over the dataset multiple times
     for epoch in range(num_epochs):
         print(f'Epoch {epoch + 1}/{num_epochs}')
@@ -69,10 +71,11 @@ def train(
         writer.add_scalar('Accuracy/train', train_accuracy, epoch)
         writer.add_scalar('Accuracy/val', val_accuracy, epoch)
 
-    # Save model
-    torch.save(net.state_dict(), model_path)
-
-    print(f'Train finished. Model saved at {model_path}.')
+        # Save model
+        if val_accuracy > max_val_accuracy:
+            max_val_accuracy = val_accuracy
+            torch.save(net.state_dict(), model_path)
+            print(f'Found better model. Saved at {model_path}.')
 
 
 if __name__ == '__main__':
