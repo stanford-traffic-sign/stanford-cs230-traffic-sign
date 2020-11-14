@@ -80,7 +80,7 @@ def train(
 
 if __name__ == '__main__':
     learning_rate = 0.001
-    num_epochs = 50
+    num_epochs = 200
 
     net.to(device)
     optimizer = optim.Adam(net.parameters(), lr=learning_rate)
