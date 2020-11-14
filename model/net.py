@@ -1,10 +1,12 @@
 import torch.nn as nn
 
+from model.baseline_net import BaselineNet
 from model.conv_net import ConvNet
 # from model.res_net import ResNet, BasicBlock
 
 
 def Net():
+    # return BaselineNet()
     return ConvNet()
     # return ResNet(BasicBlock, [2, 2, 2, 2])  # ResNet18
     # return ResNet(BasicBlock, [3, 4, 6, 3])  # ResNet34
