@@ -77,14 +77,17 @@ def show_confusion_matrix(confusion_matrix, class_names):
 
 if __name__ == '__main__':
     net.to(device)
-
     net.load_state_dict(torch.load(config.model_path))
+
+    # Accuracy
     val_accuracy, _, num_inputs = evaluate(net, loss_fn, val_data_loader, device)
     print(f'Accuracy {round(val_accuracy * 100, 2)}% ({num_inputs} images)')
 
+    # Classification Report
     y_true, y_pred = get_predictions(net, val_data_loader)
     print(classification_report(y_true, y_pred, target_names=class_map.values(), digits=4))
 
+    # Confusion Matrix
     plt.figure(figsize=(9, 7))
     plt.subplots_adjust(left=0.30, right=0.98, top=0.99, bottom=0.32)
     cm = confusion_matrix(y_true, y_pred)
