@@ -83,6 +83,8 @@ if __name__ == '__main__':
     num_epochs = 200
 
     net.to(device)
+
+    # baseline_optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
     optimizer = optim.Adam(net.parameters(), lr=learning_rate)
 
     train(
