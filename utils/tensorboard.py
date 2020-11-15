@@ -10,7 +10,7 @@ def matplotlib_imshow(img, one_channel=False):
     if one_channel:
         img = img.mean(dim=0)
     img = img / 2 + 0.5  # unnormalize
-    npimg = img.numpy()
+    npimg = img.cpu().numpy()
     if one_channel:
         plt.imshow(npimg, cmap='Greys')
     else:
@@ -25,7 +25,7 @@ def images_to_probs(net, images):
     output = net(images)
     # Convert output probabilities to predicted class
     _, preds_tensor = torch.max(output, 1)
-    preds = np.squeeze(preds_tensor.numpy())
+    preds = np.squeeze(preds_tensor.cpu().numpy())
     return preds, [F.softmax(el, dim=0)[i].item() for i, el in zip(preds, output)]
 
 
