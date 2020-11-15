@@ -13,6 +13,7 @@ import config
 def train(
         net,
         optimizer,
+        scheduler,
         loss_fn,
         train_data_loader,
         val_data_loader,
@@ -61,6 +62,8 @@ def train(
         train_accuracy, train_loss, train_num_inputs = evaluate(net, loss_fn, train_data_loader, device)
         val_accuracy, val_loss, val_num_inputs = evaluate(net, loss_fn, val_data_loader, device)
 
+        scheduler.step(val_loss)
+
         # Log statistics
         print(f'Train\taccuracy {round(train_accuracy * 100, 2)}%\tloss {round(train_loss, 3)}\timages {train_num_inputs}')
         print(f'Val\taccuracy {round(val_accuracy * 100, 2)}%\tloss {round(val_loss, 3)}\timages {val_num_inputs}')
@@ -87,9 +90,12 @@ if __name__ == '__main__':
     # baseline_optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
     optimizer = optim.Adam(net.parameters(), lr=learning_rate)
 
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
+
     train(
         net,
         optimizer,
+        scheduler,
         loss_fn,
         train_data_loader,
         val_data_loader,
