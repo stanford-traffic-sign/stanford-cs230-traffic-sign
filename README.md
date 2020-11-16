@@ -6,7 +6,7 @@ Download the dataset at https://sid.erda.dk/public/archives/daaeac0d7ce1152aea9b
 
 Unzip it and move to GTSRB folder.
 
-## Run
+## Steps
 
 Build dataset
 
@@ -38,7 +38,7 @@ Visualize model
 python summarize_model.py
 ```
 
-TensorBoard
+Run TensorBoard
 
 ```bash
 tensorboard --logdir=runs
