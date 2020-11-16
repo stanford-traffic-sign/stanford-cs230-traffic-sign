@@ -1,8 +1,8 @@
+import torch
 import torch.nn as nn
 
 from model.baseline_net import BaselineNet
 from model.conv_net import ConvNet
-# from model.res_net import ResNet, BasicBlock
 from model.res_net import ResNet, BasicBlock
 
 
