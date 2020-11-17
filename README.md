@@ -41,7 +41,7 @@ python pr_curves.py
 Visualize model
 
 ```bash
-python summarize_model.py
+python visualize_model.py
 ```
 
 Run TensorBoard
