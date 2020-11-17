@@ -32,6 +32,12 @@ Summarize model
 python summarize_model.py
 ```
 
+PR Curves
+
+```bash
+python pr_curves.py
+```
+
 Visualize model
 
 ```bash
