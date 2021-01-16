@@ -4,6 +4,11 @@
 
 https://cs230.stanford.edu/projects_fall_2020/reports/55824835.pdf
 
+
+## Architecture
+
+![image](https://user-images.githubusercontent.com/3375461/104818404-65081580-5862-11eb-9bf9-ffac3ef5a3a1.png)
+
 ## How to Run
 
 ### Prepare
