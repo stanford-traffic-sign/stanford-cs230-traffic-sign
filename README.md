@@ -1,12 +1,18 @@
 # Stanford CS230 Traffic Sign Group Project
 
-## Prepare
+## Paper
+
+https://cs230.stanford.edu/projects_fall_2020/reports/55824835.pdf
+
+## How to Run
+
+### Prepare
 
 Download the dataset at https://sid.erda.dk/public/archives/daaeac0d7ce1152aea9b61d9f1e19370/published-archive.html
 
 Unzip it and move to GTSRB folder.
 
-## Steps
+### Commands
 
 Build dataset
 
